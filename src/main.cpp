@@ -49,11 +49,11 @@ void loop(void) {
   do {
    // u8g2.setFont(u8g2_font_ncenB08_tr);
     u8g2.setFont(u8g2_font_t0_12_me );
-    u8g2.drawStr( 0,   10, "1");
-    u8g2.drawStr(12,   20, "2");
-    u8g2.drawStr(12*3, 30, "3");
-    u8g2.drawStr(12*5, 40, "4");
-    u8g2.drawStr(12*7, 50, "5");
+    u8g2.drawStr( 0,   10, "Ares");
+    u8g2.drawStr(12,   20, "Vorrei");
+    u8g2.drawStr(12*3, 30, "Aiutarti");
+    u8g2.drawStr(12*5, 40, "Ma");
+    u8g2.drawStr(12*7, 50, "Non so come fare :)");
   } while ( u8g2.nextPage() );
   delay(1000);
 }

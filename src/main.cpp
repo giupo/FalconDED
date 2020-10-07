@@ -1,9 +1,23 @@
+
+
 #include <Arduino.h>
 #include <U8g2lib.h> // lib ext
 #include <SPI.h>
 #include <Wire.h>
-#include "FalconDED_full.h" // fornito ad-hoc
+#include "FalconDED.h" // fornito ad-hoc
+#include "constants.hpp"
 
+// change here the define to pick which simulator to build for...
+
+//#define DCS
+#define FALCON_BMS
+
+#ifdef DCS
+#include "dcs_ded.hpp"
+#endif
+#ifdef FALCON_BMS
+#include "bms_ded.hpp"
+#endif
 
 
 //Function | Nano Pin | OLED Pin
@@ -38,22 +52,48 @@ int reset = 4;
 
 U8G2_SSD1322_NHD_256X64_2_4W_SW_SPI u8g2(U8G2_R0, clock, data, cs, dc, reset);
 
-char DED[5][25] = {{ 0 }};
+
+// data model, main prog state.
+char DED[DED_LINES][LINE_LENGTH] = {
+  "                       ",
+  "    FalconDED v1.0     ",
+  "                       ",
+  "  Waiting for data...  ",
+  "                       "
+};
+
 
 void setup(void) {
-  u8g2.begin();
+  #ifdef DCS
+  dcs_setup();
+  #endif
+  #ifdef FALCON_BMS
+  bms_setup();
+  #endif
+
+  u8g2.begin();  
+  u8g2.setFont(FalconDED);  
 }
 
-void loop(void) {
+void writeDED() {
   u8g2.firstPage();
   do {
-   // u8g2.setFont(u8g2_font_ncenB08_tr);
-    u8g2.setFont(u8g2_font_t0_12_me );
-    u8g2.drawStr( 0,   10, "Ares");
-    u8g2.drawStr(12,   20, "Vorrei");
-    u8g2.drawStr(12*3, 30, "Aiutarti");
-    u8g2.drawStr(12*5, 40, "Ma");
-    u8g2.drawStr(12*7, 50, "Non so come fare :)");
+    for(uint8_t i = 0; i < DED_LINES; i++) {
+      u8g2.drawStr(START_POINT, DED_LINE_HEIGHT * (i + 1), DED[i]); 
+    }
   } while ( u8g2.nextPage() );
-  delay(1000);
+}
+
+
+
+void loop(void) {  
+  #ifdef DCS
+  dcs_loop();
+  #endif
+
+  #ifdef FALCON_BMS
+  bms_loop();
+  #endif
+
+  writeDED();
 }

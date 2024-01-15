@@ -4,15 +4,12 @@
 
 #include <Arduino.h>
 
-#define BAUDRATE       9600
-#define SERIAL_TIMEOUT  100
-
 extern char DED[DED_LINES][LINE_LENGTH];
 
 void bms_setup() {
 	// setup USB/COM communications
 	Serial.begin(BAUDRATE * 3);
-  Serial.setTimeout(SERIAL_TIMEOUT);
+	Serial.setTimeout(SERIAL_TIMEOUT);
 	strncpy(DED[4], " Waiting Falcon BMS...", 22);
 }
 

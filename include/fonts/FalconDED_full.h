@@ -10,6 +10,8 @@
   Max Font    ascent =10 descent=-1
 */
 
+#include <U8g2lib.h> // lib ext
+
 const uint8_t FalconDED_full[2190] U8G2_FONT_SECTION("FalconDED_full") = {
   0,9,11,0,255,9,1,197,3,138,32,255,255,10,255,9,
   255,0,0,0,8,0,0,2,9,9,6,3,255,192,192,192,

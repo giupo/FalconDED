@@ -4,19 +4,18 @@
 #include <U8g2lib.h> // lib ext
 
 #include <SPI.h>
-#include <Wire.h>
 
-#include "FalconDED.h" // fornito ad-hoc
 
-#include <HardwareSerial.h>
+#include "fonts/FalconDED.h"
+#include "fonts/DEDFont.h"
+
 // change here the define to pick which simulator to build for...
-
-#ifdef DCS
-#include "dcs_ded.hpp"
+#ifdef DCS_
+#include "sim/dcs.hpp"
 #endif
 
-#ifdef BMS
-#include "bms_ded.hpp"
+#ifdef BMS_
+#include "sim/bms.hpp"
 #endif
 
 /*
@@ -45,61 +44,33 @@ OLED PIN  | Arduino UNO            | C++ var
 *Keep in mind* that pin 7/13 are noted as GND but they can be NC (not connected)
 */
 
-constexpr int CLOCK = 13;
-constexpr int DATA = 11;
-constexpr int CS  = 10;
-constexpr int DC = 9;
-constexpr int RESET = 8;
-
-
 // U8G2_SSD1322_NHD_256X64_1_4W_SW_SPI(rotation, clock, data, cs, dc [, reset])
 // U8G2_SSD1322_NHD_256X64_1_4W_SW_SPI u8g2(U8G2_R0, clock, data, cs, dc, reset);
 
-U8G2_SSD1322_NHD_256X64_2_4W_SW_SPI u8g2(U8G2_R0, CLOCK, DATA, CS, DC, RESET);
+//U8G2_SSD1322_NHD_256X64_2_4W_SW_SPI u8g2(U8G2_R0, CLOCK, DATA, CS, DC, RESET);
 
-
-// data model, main prog state.
-char DED[DED_LINES][LINE_LENGTH] = {
-  "                       ",
-  "   FalconDED v1.0      ",
-  "                       ",
-  " Waiting for data...   ",
-  "                       "
-};
-
+DED ded;
 
 void setup(void) {
-  #ifdef DCS
-  dcs_setup();
+  ded.init(FalconDED);
+  #ifdef DCS_
+  DCS::setup();
   #endif
 
-  #ifdef BMS
-  bms_setup();
+  #ifdef BMS_
+  BMS::setup();
   #endif
 
-  u8g2.begin();  
-  u8g2.setFont(FalconDED);  
 }
-
-void writeDED() {
-  u8g2.firstPage();
-  do {
-    for(uint8_t i = 0; i < DED_LINES; i++) {
-      u8g2.drawStr(START_POINT, DED_LINE_HEIGHT * (i + 1), DED[i]); 
-    }
-  } while ( u8g2.nextPage() );
-}
-
-
 
 void loop(void) {  
-  #ifdef DCS
-  dcs_loop();
+  #ifdef DCS_
+  DCS::loop();
   #endif
 
-  #ifdef BMS
-  bms_loop();
+  #ifdef BMS_
+  BMS::loop();
   #endif
 
-  writeDED();
+  ded.render();
 }

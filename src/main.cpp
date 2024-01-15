@@ -38,7 +38,7 @@ OLED PIN  | Arduino UNO            | C++ var
 13        | GND                    |
 14        | PIN_DC (pin 9)         | DC
 15        | PIN_RESET (pin 8)      | RESET
-16        | PIN_CS                 | CS
+16        | PIN_CS (pin 10)        | CS
 
 
 *Keep in mind* that pin 7/13 are noted as GND but they can be NC (not connected)
